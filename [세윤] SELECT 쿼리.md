@@ -114,4 +114,32 @@
   ```
   * innoDB 스토리지 엔진은 3개 테이블에서 읽은 레코드에 대해 몯 쓰기 잠금을 걸게 됨 
   * 8.0 버전 이상부터는 선택적 잠금 적용 가능 
+  * 인텔리제이에서는 신텍스 에러가 발생함 (하지만 mysql에서 작동 함)
+  ```sql
+  select * from employees as e
+  inner join dept_emp de on e.emp_no = de.emp_no
+  inner join departments d on de.dept_no = d.dept_no
+  where e.emp_no = 10001
+  FOR UPDATE OF e;
   ```
+  ![image](https://github.com/gosekose/MySQL-Study/assets/88478829/174b9875-b3a3-480c-9fb0-16a8e6567a58)
+  ![image](https://github.com/gosekose/MySQL-Study/assets/88478829/49e98f37-c71a-4103-a7c9-a94f9a454957)
+  ![image](https://github.com/gosekose/MySQL-Study/assets/88478829/a9e8da54-2e46-41c4-90b2-802342112782)
+  * employee를 제외한 테이블은 for update에 대해서 락이 걸리지 않았지만, employee만 락이 걸림 
+
+* 만약 employees만 락이 걸린 상태에서 dept_emp의 emp_no를 수정한다면 ?
+```sql
+  CREATE TABLE `dept_emp` (
+    `emp_no` int NOT NULL,
+    `dept_no` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `from_date` date NOT NULL,
+    `to_date` date NOT NULL,
+    PRIMARY KEY (`dept_no`,`emp_no`),
+    KEY `ix_fromdate` (`from_date`),
+    KEY `ix_empno_fromdate` (`emp_no`,`from_date`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci |
+
+```
+* 외래키의 잠금 상태에 따라 달라질 수 있음 
+* ![image](https://github.com/gosekose/MySQL-Study/assets/88478829/21cfe0dd-accb-46d7-ad41-f97a1496bfa7)
+
