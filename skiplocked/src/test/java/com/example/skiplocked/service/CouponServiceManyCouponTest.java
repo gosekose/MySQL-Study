@@ -162,11 +162,11 @@ class CouponServiceManyCouponTest {
     @DisplayName(
             """
                스레드: 멀티
-               격리수준: read commited
+               격리 수준: read committed
                인원: 40
                상황: 쿠폰 등록 요청할 때 for update skip locked
                테스트: 성공 
-               성능: 1초 717
+               성능: 579ms
             """
     )
     public void registerCouponForUpdateSkipLocked_multi_40() throws Exception {
@@ -177,6 +177,7 @@ class CouponServiceManyCouponTest {
 
         //when
         Coupon[] coupons = new Coupon[theadCount];
+        long start = System.currentTimeMillis();
 
         for (int i = 0; i < theadCount; i++) {
             int finalIdx = i;
@@ -194,7 +195,9 @@ class CouponServiceManyCouponTest {
             });
         }
         latch.await();
+        long end = System.currentTimeMillis();
 
+        System.out.println("성능 = " + (end - start) + "ms");
         //then
         int issuedCoupon = 0; // 발급된 쿠폰을 받은 유저의 수가 40개야 함
         HashSet<String> codeNames = new HashSet<>(); // 발급된 codeName의 개수가 40개야 함
