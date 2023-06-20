@@ -140,6 +140,5 @@
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci |
 
 ```
-* 외래키의 잠금 상태에 따라 달라질 수 있음 
+* 외래키 제약조건에 따라 달라질 수 있음 
 * ![image](https://github.com/gosekose/MySQL-Study/assets/88478829/21cfe0dd-accb-46d7-ad41-f97a1496bfa7)
-
